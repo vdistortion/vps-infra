@@ -140,8 +140,7 @@ ssh -L 3900:127.0.0.1:3900 <vps>
 Дальше обычным S3-клиентом (`rclone`, `awscli`, `mc`) с ключом проекта:
 
 ```bash
-rclone copy garage:myproject /backup/myproject \
-  --s3-endpoint http://127.0.0.1:3900
+rclone copy garage:myproject /backup/myproject
 ```
 
 ---
@@ -186,19 +185,22 @@ docker exec garage /garage status
 
 ## Бэкапы
 
-Garage хранит метаданные и данные в volume `garage_meta` и
-`garage_data`. Бэкапить можно двумя путями:
+Автоматическое расписание бэкапов в этом репозитории пока не настроено.
+Garage хранит метаданные и данные в volume `garage_meta` и `garage_data`.
+До появления отдельной backup-системы их нужно сохранять вручную:
 
-1. **На уровне volume** — привычными инструментами бэкапа Docker
-   volume (snapshot директории `/var/lib/docker/volumes/`).
-
-2. **На уровне S3** — через `rclone` или `s3cmd`, направленные на
-   `http://garage:3900`, скопировать бакеты off-site:
+1. **На уровне volume** — средствами резервного копирования Docker volume.
+2. **На уровне S3** — через `rclone`, настроенный на Garage. Для запуска с
+   локальной машины сначала поднимите SSH-туннель из раздела выше, затем
+   скопируйте бакет на отдельный диск или удалённое хранилище:
 
 ```bash
-# Пример с rclone (нужен настроенный remote指向 garage)
-rclone copy garage:myproject /backup/myproject --s3-end-url http://garage:3900
+rclone copy garage:myproject /backup/myproject
 ```
+
+Для production желательно сохранять и PostgreSQL-дампы проекта, и данные
+Garage в независимое off-site-хранилище. Один только Docker volume на том же
+VPS не защищает от потери VPS.
 
 ---
 
