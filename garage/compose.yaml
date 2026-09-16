@@ -10,11 +10,13 @@ services:
       - ./garage.toml:/etc/garage.toml:ro
       - garage_meta:/var/lib/garage/meta
       - garage_data:/var/lib/garage/data
-    # S3 API (3900) is reached by other containers over the `garage` network,
-    # so no host ports are published. Uncomment for local debugging with awscli.
-    # ports:
-    #   - "3900:3900"
-    #   - "3903:3903"
+    # S3 API (3900) is reached by other containers over the `garage` network.
+    # We also bind it to the VPS loopback (127.0.0.1) so a developer can reach
+    # it from a local machine through an SSH tunnel for migrations:
+    #   ssh -L 3900:127.0.0.1:3900 <vps>
+    # 3903 is the admin (API) port — keep it unpublished for security.
+    ports:
+      - "127.0.0.1:3900:3900"
     networks:
       - garage
 
