@@ -1,0 +1,28 @@
+name: garage
+
+services:
+  garage:
+    image: dxflrs/garage:v2.3.0
+    container_name: garage
+    restart: unless-stopped
+    command: ["/garage", "server", "--single-node"]
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
+    # S3 API (3900) is reached by other containers over the `garage` network,
+    # so no host ports are published. Uncomment for local debugging with awscli.
+    # ports:
+    #   - "3900:3900"
+    #   - "3903:3903"
+    networks:
+      - garage
+
+volumes:
+  garage_meta:
+  garage_data:
+
+networks:
+  garage:
+    name: garage
+    driver: bridge

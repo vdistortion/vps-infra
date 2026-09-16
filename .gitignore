@@ -1,0 +1,4 @@
+.idea
+
+# Real secrets — copy from garage.toml.example, never commit
+garage.toml
