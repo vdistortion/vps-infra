@@ -14,7 +14,9 @@
 ## Быстрый старт на новом VPS
 
 ```bash
-git clone git@github.com:vdistortion/vps-infra.git ~/vps-infra
+# apt update && apt upgrade -y && apt install -y nodejs npm && curl -fsSL https://get.docker.com | sh
+
+git clone https://github.com/vdistortion/vps-infra.git ~/vps-infra
 
 # 1. Caddy
 docker network create caddy
